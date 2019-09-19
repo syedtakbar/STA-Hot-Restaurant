@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Hot Restaurant</title>
+  <!-- Latest compiled and minified CSS & JS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://code.jquery.com/jquery.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="jumbotron">
+      <h1>Hot Restaurant</h1>
+      <h3>Book your seat before they are all gone!</h3>
+      <hr>
+      <a href="/"><button class="btn btn-danger btn-lg"><span class="fa fa-eye"></span>Home</button></a>
+    </div>
+
+    <div class="row">
+
+      <div class="col-12">
+
+        <div class="card mb-4">
+          <div class="card-header">
+            <h3><strong>Reservations</strong></h3>
+          </div>
+          <!-- Current Tables in Use -->
+
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4 class="panel-title">Current Reservations</h4>
+            </div>
+            <div class="panel-body" id="tableSection"></div>
+          </div>
+          <br>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+
+      <div class="col-12">
+
+        <div class="card mb-4">
+          <div class="card-header">
+            <h3><strong>Waiting List</strong></h3>
+          </div>
+          <!-- Waiting List Panel -->
+
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4 class="panel-title">Waiting List</h4>
+            </div>
+            <div class="panel-body" id="waitListSection"></div>
+          </div>
+
+        </div>
+        <br>
+      </div>
+    </div>
+  </div>
+  <footer class="footer">
+			<div class="container">				
+				<p>
+					<a href="#" id="clear">Clear Table</a> |
+					<a href="/api/tables">API Table Link</a> |
+					<a href="/api/waitlist">API Wait List</a>
+				</p>
+			</div>
+		</footer>
+  </div>
+  <script type="text/javascript">
+    function LoadTables() {
+
+      const url = window.location.origin + "/api/tables";
+      console.log(url);
+      fetch(url)
+        .then((res) => res.json())
+        .then(function (data) {
+          console.log(data);
+          if (!data) return;
+
+          let i = 0;
+          const tableSection = document.getElementById("tableSection");
+
+          data.forEach(element => {
+
+
+            const firstDiv = document.createElement("div");
+            i++;
+            let elemId = "tableWell-" + i;
+            let elemhtml = `<h4><span class="label label-primary">${i}</span># ${element.name}</h4>`
+
+            firstDiv.className = "well";
+            firstDiv.setAttribute("id", elemId);
+            firstDiv.innerHTML = elemhtml;
+
+            tableSection.append(firstDiv);
+
+          });
+
+        });
+    };
+
+    function LoadWaitList() {
+
+      const url = window.location.origin + "/api/waitlist";
+      console.log(url);
+      fetch(url)
+        .then((res) => res.json())
+        .then(function (data) {
+          console.log(data);
+          if (!data) return;
+
+          let i = 0;
+          const waitlistSection = document.getElementById("waitListSection");
+
+          data.forEach(element => {
+
+
+            const firstDiv = document.createElement("div");
+            i++;
+            let elemId = "tableWell-" + i;
+            let elemhtml = `<h4><span class="label label-primary">${i}</span># ${element.name}</h4>`
+
+            firstDiv.className = "well";
+            firstDiv.setAttribute("id", elemId);
+            firstDiv.innerHTML = elemhtml;
+
+            waitlistSection.append(firstDiv);
+
+          });
+
+        });
+    };
+
+    function clearTable()	{
+      const url = window.location.origin + "/api/clear";
+      console.log(url);
+    
+      fetch(url, {
+        method: "POST"
+      });
+      
+	  }
+
+    document.getElementById("clear").addEventListener("click", clearTable);
+
+    LoadTables();
+    LoadWaitList();
+  </script>
+</body>
+
+</html>
